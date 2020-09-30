@@ -1,0 +1,13 @@
+.game {
+    display: flex;
+}
+
+.game-board {
+    flex: 50%;
+    min-height: 100vh;
+    transition: background-color 0.5s ease;
+}
+
+.game-board.active {
+    background-color: #6B768C;
+}

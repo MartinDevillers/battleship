@@ -17,6 +17,14 @@
 
 [**See it in action!**](https://my-battleship-client.herokuapp.com)
 
+## ✨ Features
+
+- Play against the computer or another player
+- Automated fleet arrangement
+- Cool vector-based graphics
+- Enjoyed best on desktop (mobile coming soon™)
+- Tested on Safari, Chrome and Edge
+
 ## 🚀 Getting Started
 
 1. **Clone this repo.**

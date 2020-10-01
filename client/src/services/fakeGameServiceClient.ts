@@ -4,7 +4,7 @@ import { contains, invert, random, serialize } from "./coordinateUtils"
 import { clone, sleep } from "./utils"
 
 // Service client that pretends to communicate with a real server (but doesn't!)
-export default class GameServiceClient {
+export default class FakeGameServiceClient {
   // In-memory database of games
   readonly database: Map<string, ClientGameDto>
 
@@ -56,7 +56,7 @@ export default class GameServiceClient {
 
   // Fires a shot at the specified target
   async fireShot({ gameId, target }: FireShotRequest): Promise<FireShotResponse> {
-    const clientGameDto = this.database.get(gameId)
+    const clientGameDto = this.database.get(gameId.toString())
 
     // Check if we still have this game's data
     if (clientGameDto === undefined) {
@@ -113,8 +113,8 @@ export default class GameServiceClient {
   }
 
   // Simulates the enemy firing a shot at the player
-  returnFire(gameId: string): void {
-    const clientGameDto = this.database.get(gameId)
+  returnFire(gameId: number): void {
+    const clientGameDto = this.database.get(gameId.toString())
     if (clientGameDto === undefined) {
       console.error(`Failed to return fire. Cannot find game with ID: ${gameId}`)
       return

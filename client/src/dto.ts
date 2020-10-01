@@ -29,8 +29,19 @@ export enum Player {
   B,
 }
 
+export interface GetGameRequest {
+  gameId: number
+  player: Player
+}
+
+export interface GetGameResponse {
+  success: boolean
+  message: string
+  game: ClientGameDto
+}
+
 export interface FireShotRequest {
-  gameId: string
+  gameId: number
   player: Player
   target: CoordinateDto
 }

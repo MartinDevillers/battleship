@@ -1,8 +1,15 @@
-import { Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import { FireShotRequest, FireShotResponse, GetGameRequest, GetGameResponse } from "./dto"
 import Service from "./service"
 
 const service = new Service()
+
+export const corsHandler = (req: Request, res: Response, next: NextFunction) => {
+  res.header("Access-Control-Allow-Origin", "https://my-battleship-client.herokuapp.com")
+  // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+  res.header("Access-Control-Allow-Headers", "Content-Type")
+  next()
+}
 
 // Simple sanity check to see if the API is alive
 export const rootHandler = (_req: Request, res: Response): Response => {

@@ -3,12 +3,11 @@ import "./Game.css"
 import { useParams } from "react-router-dom"
 import Board from "./Board"
 import { ShipCells, ShotCells, SunkShipCells, TargetCells, TargetingCell } from "./Cells"
-import RealGameServiceClient from "../services/realGameServiceClient"
 import { equals } from "../services/coordinateUtils"
 import { BoardDto, CoordinateDto, ShotReceivedEvent } from "../dto"
+import DynamicGameServiceClient from "../services/gameServiceClient"
 
-// Client for communicating with the server (or simulating a local game)
-const gameServiceClient = new RealGameServiceClient()
+const gameServiceClient = new DynamicGameServiceClient()
 
 // Component for a game of Battleship
 const Game: React.FC = () => {

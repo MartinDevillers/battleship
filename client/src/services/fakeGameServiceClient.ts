@@ -1,24 +1,33 @@
 import FleetArranger from "./fleetArranger"
-import { ClientGameDto, FireShotRequest, FireShotResponse, Player, ShotReceivedEvent } from "../dto"
+import {
+  ClientGameDto,
+  FireShotRequest,
+  FireShotResponse,
+  GetGameRequest,
+  GetGameResponse,
+  Player,
+  ShotReceivedEvent,
+} from "../dto"
 import { contains, invert, random, serialize } from "./coordinateUtils"
 import { clone, sleep } from "./utils"
+import { GameServiceClient } from "./gameServiceClient"
 
 // Service client that pretends to communicate with a real server (but doesn't!)
-export default class FakeGameServiceClient {
+export default class FakeGameServiceClient implements GameServiceClient {
   // In-memory database of games
-  readonly database: Map<string, ClientGameDto>
+  readonly database: Map<number, ClientGameDto>
 
   onShotReceivedSubscription: (event: ShotReceivedEvent) => void
 
   constructor() {
-    this.database = new Map<string, ClientGameDto>()
+    this.database = new Map<number, ClientGameDto>()
     this.onShotReceivedSubscription = (): void => {}
   }
 
   // Returns the game state for the given id (or creates a new one if it doesn't exist)
-  async getGame(id: string, player: Player): Promise<ClientGameDto> {
-    console.log(`Getting game state for ${id} ${player}`)
-    if (!this.database.has(id)) {
+  async getGame({ gameId, player }: GetGameRequest): Promise<GetGameResponse> {
+    console.log(`Getting game state for ${gameId} ${player}`)
+    if (!this.database.has(gameId)) {
       const clientGameDto: ClientGameDto = {
         playerBoard: {
           ships: [],
@@ -35,14 +44,14 @@ export default class FakeGameServiceClient {
       const enemyFleetArranger = new FleetArranger()
       clientGameDto.enemyBoard.ships = enemyFleetArranger.arrange()
 
-      this.database.set(id, clientGameDto)
+      this.database.set(gameId, clientGameDto)
     }
 
     // Let's pretend we're talking to a slow server
     await sleep()
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const clientGameDto = clone(this.database.get(id)!)
+    const clientGameDto = clone(this.database.get(gameId)!)
 
     // Show only sunk ships on the enemy board
     const enemyHitCoordinates = clientGameDto.enemyBoard.shots.filter((s) => s.isHit).map((s) => s.target)
@@ -51,12 +60,16 @@ export default class FakeGameServiceClient {
     )
     clientGameDto.enemyBoard.ships = enemySunkShips
 
-    return clientGameDto
+    return {
+      success: true,
+      message: `Retrieved game state for${gameId} ${player}`,
+      game: clientGameDto,
+    }
   }
 
   // Fires a shot at the specified target
   async fireShot({ gameId, target }: FireShotRequest): Promise<FireShotResponse> {
-    const clientGameDto = this.database.get(gameId.toString())
+    const clientGameDto = this.database.get(gameId)
 
     // Check if we still have this game's data
     if (clientGameDto === undefined) {
@@ -95,7 +108,7 @@ export default class FakeGameServiceClient {
     })
 
     // Schedule a return shot in the nearby future
-    setTimeout(() => this.returnFire(gameId), Math.random() * 2000 + 500)
+    setTimeout(() => this.returnFire(gameId), Math.random() * 500 + 300)
 
     // Let's pretend we're talking to a slow server
     await sleep()
@@ -107,14 +120,17 @@ export default class FakeGameServiceClient {
     }
   }
 
-  // Event-handler for receiving a shot from the enemy
-  onShotReceived(subscriber: (event: ShotReceivedEvent) => void): void {
-    this.onShotReceivedSubscription = subscriber
+  subscribeToReceivedShots(gameId: number, player: Player, handler: (event: ShotReceivedEvent) => void): void {
+    this.onShotReceivedSubscription = handler
+  }
+
+  unsubscribeFromReceivedShots(): void {
+    this.onShotReceivedSubscription = (): void => {}
   }
 
   // Simulates the enemy firing a shot at the player
   returnFire(gameId: number): void {
-    const clientGameDto = this.database.get(gameId.toString())
+    const clientGameDto = this.database.get(gameId)
     if (clientGameDto === undefined) {
       console.error(`Failed to return fire. Cannot find game with ID: ${gameId}`)
       return

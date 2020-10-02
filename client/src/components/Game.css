@@ -11,3 +11,25 @@
 .game-board.active {
     background-color: #6B768C;
 }
+
+.game-board.winner {
+    background-color: #758A6A;
+    animation: flash-winner-once 1s linear 1;
+}
+
+.game-board.loser {
+    background-color: #8A6A75;
+    animation: flash-loser-once 1s linear 1;
+}
+
+@keyframes flash-winner-once {
+    0% {
+        color: #BAC5B4;
+    }
+}
+
+@keyframes flash-loser-once {
+    0% {
+        color: #C5B4BA;
+    }
+}

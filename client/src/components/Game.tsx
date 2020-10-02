@@ -30,6 +30,12 @@ const Game: React.FC = () => {
   // Targeting cell is used when a shot has been fired and we're waiting for the server to respond
   const [targeting, setTargeting] = React.useState<CoordinateDto>(emptyCoordinate)
 
+  // True if the player has won
+  const [hasPlayerWon, setPlayerWon] = React.useState(false)
+
+  // True if the enemy has won
+  const [hasEnemyWon, setEnemyWon] = React.useState(false)
+
   // Grabs the full state of the game from the server and uses it to render the game
   useEffect(() => {
     if (loading) {
@@ -39,6 +45,8 @@ const Game: React.FC = () => {
           setEnemyBoard(response.game.enemyBoard)
           setMyTurn(response.game.isMyTurn)
           setTargeting(emptyCoordinate)
+          setPlayerWon(response.game.hasWon === true)
+          setEnemyWon(response.game.hasWon === false)
         }
         setLoading(false)
       })
@@ -71,14 +79,22 @@ const Game: React.FC = () => {
 
   return (
     <div className="game">
-      <div className={`game-board ${isMyTurn ? "" : "active"}`}>
+      <div
+        className={`game-board ${isMyTurn ? "" : "active"} ${hasPlayerWon ? "winner" : ""} ${
+          hasEnemyWon ? "loser" : ""
+        }`}
+      >
         <h2>Player</h2>
         <Board>
           <ShipCells ships={playerBoard.ships} />
           <ShotCells shots={playerBoard.shots} />
         </Board>
       </div>
-      <div className={`game-board ${isMyTurn ? "active" : ""}`}>
+      <div
+        className={`game-board ${isMyTurn ? "active" : ""} ${hasPlayerWon ? "loser" : ""} ${
+          hasEnemyWon ? "winner" : ""
+        }`}
+      >
         <h2>Opponent</h2>
         <Board>
           <ShotCells shots={enemyBoard.shots} />

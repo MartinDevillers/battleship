@@ -22,6 +22,7 @@ export interface ClientGameDto {
   playerBoard: BoardDto
   enemyBoard: BoardDto
   isMyTurn: boolean
+  hasWon?: boolean
 }
 
 export enum Player {

@@ -60,6 +60,22 @@ export default class FakeGameServiceClient implements GameServiceClient {
     )
     clientGameDto.enemyBoard.ships = enemySunkShips
 
+    // Check whether all enemy ships have been sunk
+    if (enemySunkShips.length === 5) {
+      clientGameDto.isMyTurn = false
+      clientGameDto.hasWon = true
+    }
+
+    // Check whether all player ships have been sunk
+    const playerShipCoordinates = clientGameDto.playerBoard.ships.flatMap((s) => s.positions)
+    const playerShotCoordinates = clientGameDto.playerBoard.shots.map((s) => s.target)
+    const hasPlayerLost = playerShipCoordinates.every((s) => contains(playerShotCoordinates, s))
+
+    if (hasPlayerLost) {
+      clientGameDto.isMyTurn = false
+      clientGameDto.hasWon = false
+    }
+
     return {
       success: true,
       message: `Retrieved game state for${gameId} ${player}`,
@@ -144,10 +160,13 @@ export default class FakeGameServiceClient implements GameServiceClient {
     // Check if this target will hit any of the player's ships
     const playerShipCoordinates = clientGameDto.playerBoard.ships.flatMap((s) => s.positions)
     const isHit = contains(playerShipCoordinates, target)
-    // Switch turn to the player
-    clientGameDto.isMyTurn = true
     // Register the shot on the player's board
     clientGameDto.playerBoard.shots.push({ target, isHit })
+    // Check whether the game is over
+    playerShotCoordinates.push(target)
+    const isGameOver = isHit && playerShipCoordinates.every((s) => contains(playerShotCoordinates, s))
+    // Switch turn to the player
+    clientGameDto.isMyTurn = !isGameOver
     // Let the player know that the enemy has fired a shot
     this.onShotReceivedSubscription({ target })
   }

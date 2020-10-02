@@ -40,10 +40,27 @@ export default class Service {
     const enemySunkShips = enemyBoard.ships.filter((s) => s.positions.every((p) => contains(enemyHitCoordinates, p)))
     enemyBoard.ships = enemySunkShips
 
+    let hasWon
+
+    // Check whether all enemy ships have been sunk
+    if (enemySunkShips.length === 5) {
+      hasWon = true
+    }
+
+    // Check whether all player ships have been sunk
+    const playerShipCoordinates = playerBoard.ships.flatMap((s) => s.positions)
+    const playerShotCoordinates = playerBoard.shots.map((s) => s.target)
+    const hasPlayerLost = playerShipCoordinates.every((s) => contains(playerShotCoordinates, s))
+
+    if (hasPlayerLost) {
+      hasWon = false
+    }
+
     return {
       playerBoard,
       enemyBoard,
       isMyTurn: serverGameDto.turn === player,
+      hasWon,
     }
   }
 

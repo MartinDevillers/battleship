@@ -95,6 +95,8 @@ Occurs when a shot by the other player has been made
 17. Adding starting page to client and routing to switch from the home screen to the game screen.
 18. Setting up Server Side Events for handling received shots. Had a little trouble with my dev setup losing connection because of https://github.com/facebook/create-react-app/issues/1633
 19. Deploying client & server on Heroku. Ran into some deployment woes with Heroku but nothing serious. Added CORS support since we're running on separate servers.
+20. Added ability to choose between playing against the computer or a real person
+21. Added win detection 
 
 # Todo
 * End game mechanics

@@ -1,5 +1,6 @@
 import { ShipDto } from "./dto"
 import { clone } from "./utils"
+import { transpose } from "./coordinateUtils"
 
 // Class for placing a series of ships on the grid. Used to initialize a game.
 export default class FleetArranger {
@@ -84,11 +85,14 @@ export default class FleetArranger {
   // Randomly moves all ships around the board
   randomlyArrangeFleet(fleet: ShipDto[]): void {
     for (const ship of fleet) {
-      const x = Math.floor(Math.random() * FleetArranger.BOARD_SIZE)
-      const y = Math.floor(Math.random() * FleetArranger.BOARD_SIZE)
+      const x = Math.floor(Math.random() * FleetArranger.BOARD_SIZE) + 1
+      const y = Math.floor(Math.random() * FleetArranger.BOARD_SIZE) + 1
+      const rotate = Math.random() > 0.5
+      if (rotate) {
+        ship.positions = transpose(ship.positions)
+      }
       const xDiff = x - ship.positions[0].x
       const yDiff = y - ship.positions[0].y
-      // @todo add support for rotating ships
       ship.positions.forEach((c) => {
         c.x += xDiff
         c.y += yDiff

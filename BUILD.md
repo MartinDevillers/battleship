@@ -97,11 +97,10 @@ Occurs when a shot by the other player has been made
 19. Deploying client & server on Heroku. Ran into some deployment woes with Heroku but nothing serious. Added CORS support since we're running on separate servers.
 20. Added ability to choose between playing against the computer or a real person
 21. Added win detection 
+22. Tried to move common assets to a shared library using Typescript Project References feature but had to abandon that plan because create-react-app doesn't support it (yet) https://github.com/facebook/create-react-app/issues/6799
+23. Added fleet rotation
 
 # Todo
-* End game mechanics
-* Move common assets to a shared library (using TypeScript project reference)
 * Responsiveness (aka make it work on a smartphone)
-* Add support for rotation in fleet arranger
 * CSS still feels messy and spread around
 * Proper unit testing

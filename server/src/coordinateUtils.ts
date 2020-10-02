@@ -25,3 +25,6 @@ export const invert = (coordinates: CoordinateDto[]): CoordinateDto[] =>
 // Gets a random coordinate from the given set of coordinates
 export const random = (coordinates: CoordinateDto[]): CoordinateDto =>
   coordinates[Math.floor(Math.random() * coordinates.length)]
+
+// Transposes the given set of coordinates (flips coordinates)
+export const transpose = (coordinates: CoordinateDto[]): CoordinateDto[] => coordinates.map((c) => ({ x: c.y, y: c.x }))

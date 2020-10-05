@@ -3,8 +3,39 @@
     margin: 0 auto;
     background-color: #000;
     background-image: linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px);
+    width: 550px; 
+    height: 550px;
+    background-size: 50px 50px;
 }
 
 .cell {
     position: absolute;
+    width: 49px;
+    height: 49px;
+    transform: translateX(+1px);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.cell span {
+    font-size: 24px;
+}
+
+@media (max-width: 550px) {
+    .board {
+        width: 275px; 
+        height: 275px;
+        background-size: 25px 25px;
+    }
+
+    .cell {
+        position: absolute;
+        width: 24px;
+        height: 24px;
+    }
+
+    .cell span {
+        font-size: 14px;
+    }
 }

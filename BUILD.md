@@ -99,8 +99,9 @@ Occurs when a shot by the other player has been made
 21. Added win detection 
 22. Tried to move common assets to a shared library using Typescript Project References feature but had to abandon that plan because create-react-app doesn't support it (yet) https://github.com/facebook/create-react-app/issues/6799
 23. Added fleet rotation
+24. Added responsiveness so the game renders well on smaller viewports. Replaced all the absolute positioning of div's with CSS3 translations, which is a more modern approach and makes it easier to resize the board. 
 
 # Todo
-* Responsiveness (aka make it work on a smartphone)
+* More intelligent computer opponent
 * CSS still feels messy and spread around
 * Proper unit testing

@@ -2,6 +2,10 @@
     display: flex;
 }
 
+.game h2 {
+    font-size: calc(10px + 2vmin);
+}
+
 .game-board {
     flex: 50%;
     min-height: 100vh;
@@ -31,5 +35,15 @@
 @keyframes flash-loser-once {
     0% {
         color: #C5B4BA;
+    }
+}
+
+@media (max-width: 1224px) {
+    .game {
+        flex-direction: column;
+    }
+
+    .game-board {
+        min-height: auto;
     }
 }

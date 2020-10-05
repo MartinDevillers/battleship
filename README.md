@@ -42,6 +42,7 @@ Navigate into your freshly cloned directory and start up the server.
 ```sh
 cd battleship
 cd server
+npm install
 npm run dev
 ```
 
@@ -50,6 +51,7 @@ In a second terminal, run the following commands to start the client.
 ```sh
 cd battleship
 cd client
+npm install
 npm start
 ```
 
